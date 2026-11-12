@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HealthMemory | Family Health</title>
+  <meta name="description" content="HealthMemory - Organise family health records, medicines and appointments.">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body data-theme="light">
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#home">
+      <span class="brand-icon">H</span>
+      <span>HealthMemory<small>Your family's health, organised</small></span>
+    </a>
+
+    <div class="profile-mini">
+      <div class="avatar">H</div>
+      <div><strong id="sidebarProfileName">My Profile</strong><small>Current profile</small></div>
+    </div>
+
+    <p class="nav-label">WORKSPACE</p>
+    <nav class="nav">
+      <button class="nav-link active" data-page="home">⌂ Home</button>
+      <button class="nav-link" data-page="records">▤ Medical Records</button>
+      <button class="nav-link" data-page="medicines">✚ Medicines</button>
+      <button class="nav-link" data-page="appointments">▦ Doctor Appointments</button>
+      <button class="nav-link" data-page="timeline">↗ Health Timeline</button>
+    </nav>
+
+    <p class="nav-label">PERSONAL</p>
+    <nav class="nav">
+      <button class="nav-link" data-page="profile">♧ Profile</button>
+      <button class="nav-link" data-page="settings">⚙ Settings</button>
+      <button class="nav-link" data-page="about">ⓘ How it works</button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="privacy-mini">
+        <strong>🔒 Private by design</strong>
+        <small>Information stays in this browser.</small>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn">☰</button>
+      <div><p class="eyebrow">HEALTHMEMORY</p><h2 id="pageTitle">Home</h2></div>
+      <div class="top-actions"><span id="todayLabel" class="today-label"></span><button class="theme-btn" id="themeToggle">☀</button></div>
+    </header>
+
+    <!-- HOME -->
+    <section class="page active" id="home">
+      <div class="welcome">
+        <div><span class="welcome-tag">YOUR HEALTH SPACE</span>
+          <h1>Good health starts with <span>good organisation.</span></h1>
+          <p>Keep your reports, medicines and doctor visits together.</p>
+        </div>
+        <div class="welcome-icon">✚</div>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card"><span class="stat-icon mint">▤</span><p>Medical records</p><h2 id="recordCount">0</h2></article>
+        <article class="stat-card"><span class="stat-icon blue">💊</span><p>Active medicines</p><h2 id="medicineCount">0</h2></article>
+        <article class="stat-card"><span class="stat-icon purple">▦</span><p>Upcoming visits</p><h2 id="appointmentCount">0</h2></article>
+        <article class="stat-card"><span class="stat-icon orange">♧</span><p>Family profiles</p><h2 id="familyCount">1</h2></article>
+      </div>
+
+      <div class="content-grid">
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Today's medicines</h3><p>Track your daily doses</p></div><button class="text-btn" data-page="medicines">View all →</button></div>
+          <div id="todayDoseList" class="list"></div>
+        </article>
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Upcoming appointment</h3><p>Your next doctor visit</p></div><button class="text-btn" data-page="appointments">View all →</button></div>
+          <div id="nextAppointment" class="empty-state">No upcoming appointment.</div>
+        </article>
+      </div>
+
+      <article class="panel">
+        <h3>Quick actions</h3><p>Manage your health information</p>
+        <div class="quick-actions">
+          <button class="quick-btn" data-page="records">＋ Add medical record</button>
+          <button class="quick-btn" data-page="medicines">＋ Add medicine</button>
+          <button class="quick-btn" data-page="appointments">＋ Add appointment</button>
+          <button class="quick-btn" data-page="profile">＋ Manage profile</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- RECORDS -->
+    <section class="page" id="records">
+      <div class="page-intro"><div><h1>Medical records</h1><p>Store and view your reports in one place.</p></div><button class="primary-btn" id="toggleRecordForm">＋ Add record</button></div>
+
+      <form id="recordForm" class="panel form-panel hidden">
+        <h3 id="recordFormTitle">Add medical record</h3>
+        <input type="hidden" id="recordId">
+        <div class="form-grid">
+          <label>Record name<input id="recordName" required></label>
+          <label>Record type<select id="recordType"><option>Blood Test</option><option>Prescription</option><option>Scan / X-ray</option><option>Discharge Summary</option><option>Other</option></select></label>
+          <label>Date<input id="recordDate" type="date" required></label>
+          <label>Doctor / Hospital<input id="recordDoctor"></label>
+          <label class="full">Notes<textarea id="recordNotes"></textarea></label>
+          <label class="full">Upload PDF or image<input id="recordFile" type="file" accept=".pdf,image/*"></label>
+        </div>
+        <div class="form-actions"><button type="button" class="secondary-btn" id="cancelRecord">Cancel</button><button class="primary-btn">Save record</button></div>
+      </form>
+      <div class="toolbar"><input id="recordSearch" placeholder="Search records..."><select id="recordFilter"><option value="all">All records</option><option>Blood Test</option><option>Prescription</option><option>Scan / X-ray</option><option>Discharge Summary</option><option>Other</option></select></div>
+      <div id="recordList" class="records-grid"></div>
+    </section>
+
+    <!-- MEDICINES -->
+    <section class="page" id="medicines">
+      <div class="page-intro"><div><h1>Medicines</h1><p>Manage medicine plans and daily doses.</p></div><button class="primary-btn" id="toggleMedicineForm">＋ Add medicine</button></div>
+
+      <form id="medicineForm" class="panel form-panel hidden">
+        <h3 id="medicineFormTitle">Add medicine</h3>
+        <input type="hidden" id="medicineId">
+        <div class="form-grid">
+          <label>Medicine name<input id="medicineName" required></label>
+          <label>Strength<input id="medicineStrength" placeholder="500 mg"></label>
+          <label>Purpose<input id="medicinePurpose"></label>
+          <label>Start date<input id="medicineStart" type="date" required></label>
+          <label>Duration (months)<input id="medicineMonths" type="number" min="1" max="120" value="1" required></label>
+          <label>End date<input id="medicineEnd" readonly></label>
+          <label class="full">Dose occasion<select id="medicineOccasion"><option>Before breakfast</option><option>After breakfast</option><option>Before lunch</option><option>After lunch</option><option>Evening</option><option>After dinner</option><option>Bedtime</option><option>Custom</option></select></label>
+          <label>Time<input id="medicineTime" type="time" value="08:00" required><small>Use the time picker to scroll.</small></label>
+          <label>Second dose time (optional)<input id="medicineTime2" type="time"></label>
+          <label class="full">Instructions<textarea id="medicineInstructions"></textarea></label>
+          <label class="full">Medicine photo<input id="medicineImage" type="file" accept="image/*"></label>
+          <div id="medicineImagePreview" class="image-preview"></div>
+        </div>
+        <div class="form-actions"><button type="button" class="secondary-btn" id="cancelMedicine">Cancel</button><button class="primary-btn">Save medicine</button></div>
+      </form>
+
+      <div class="notice">Medicine tracking is a personal reminder. Follow your doctor's prescription.</div>
+      <div id="medicineList" class="medicine-grid"></div>
+      <h2 class="section-title">Medicine history</h2>
+      <div id="medicineHistory" class="list"></div>
+    </section>
+
+    <!-- APPOINTMENTS -->
+    <section class="page" id="appointments">
+      <div class="page-intro"><div><h1>Doctor appointments</h1><p>Plan and remember your healthcare visits.</p></div><button class="primary-btn" id="toggleAppointmentForm">＋ Add appointment</button></div>
+
+      <form id="appointmentForm" class="panel form-panel hidden">
+        <h3 id="appointmentFormTitle">Add appointment</h3>
+        <input type="hidden" id="appointmentId">
+        <div class="form-grid">
+          <label>Doctor name<input id="doctorName" required></label>
+          <label>Speciality<select id="doctorSpeciality" required><option value="">Choose speciality</option><option>General Physician</option><option>Cardiology</option><option>Neurology</option><option>Dermatology</option><option>Orthopaedics</option><option>Gastroenterology</option><option>ENT</option><option>Ophthalmology</option><option>Urology</option><option>Paediatrics</option><option>Psychiatry</option><option>Other</option></select></label>
+          <label>Date<input id="appointmentDate" type="date" required></label>
+          <label>Time<input id="appointmentTime" type="time" required></label>
+          <label>Hospital / Clinic<input id="appointmentPlace"></label>
+          <label>Phone<input id="appointmentPhone" type="tel"></label>
+          <label class="full">Notes<textarea id="appointmentNotes"></textarea></label>
+        </div>
+        <div class="form-actions"><button type="button" class="secondary-btn" id="cancelAppointment">Cancel</button><button class="primary-btn">Save appointment</button></div>
+      </form>
+
+      <div class="calendar-panel panel">
+        <div class="calendar-header"><button class="secondary-btn" id="appointmentPrev">←</button><h3 id="appointmentMonthLabel"></h3><button class="secondary-btn" id="appointmentNext">→</button></div>
+        <div class="calendar-week"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+        <div id="appointmentCalendar" class="calendar-grid"></div><div id="appointmentDayDetail" class="calendar-detail"></div>
+      </div>
+      <h2 class="section-title">All appointments</h2><div id="appointmentList" class="list"></div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="page" id="timeline">
+      <div class="page-intro"><div><h1>Health timeline</h1><p>Your health activities in chronological order.</p></div></div>
+      <div id="timelineList" class="timeline"></div>
+    </section>
+
+    <!-- PROFILE -->
+    <section class="page" id="profile">
+      <div class="page-intro"><div><h1>Profile</h1><p>Manage personal and family health profiles.</p></div></div>
+      <article class="panel">
+        <h3>Family profiles</h3><p>Select a profile to manage its information separately.</p>
+        <form id="profileForm" class="inline-form"><input id="profileName" placeholder="Family member name" required><select id="profileRelation"><option>Self</option><option>Parent</option><option>Spouse</option><option>Child</option><option>Sibling</option><option>Other</option></select><button class="primary-btn">＋ Add profile</button></form>
+        <div id="profileList" class="profile-grid"></div>
+      </article>
+
+      <!-- EMERGENCY INFORMATION AT THE END OF PROFILE -->
+      <article class="panel emergency-panel">
+        <div class="panel-heading"><div><h3>Emergency contacts & health card</h3><p>Important information for urgent situations.</p></div><span class="emergency-icon">♥</span></div>
+        <form id="emergencyForm">
+          <div class="form-grid">
+            <label>Blood group<select id="bloodGroup"><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option><option>Unknown</option></select></label>
+            <label>Allergies<input id="emergencyAllergies"></label>
+            <label class="full">Medical conditions<input id="emergencyConditions"></label>
+            <label>Contact name<input id="emergencyContactName"></label>
+            <label>Relationship<input id="emergencyRelationship"></label>
+            <label>Country code<select id="emergencyCountry"><option value="+91">🇮🇳 India +91</option><option value="+1">🇺🇸 USA +1</option><option value="+44">🇬🇧 UK +44</option><option value="+971">🇦🇪 UAE +971</option><option value="+61">🇦🇺 Australia +61</option></select></label>
+            <label>Phone number<input id="emergencyPhone" type="tel" maxlength="10" inputmode="numeric" placeholder="10-digit number"></label>
+          </div>
+          <div class="form-actions"><button class="primary-btn">Save emergency information</button></div>
+        </form>
+        <div id="emergencySummary" class="emergency-summary"></div>
+      </article>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="page" id="settings">
+      <div class="page-intro"><div><h1>Settings</h1><p>Personalise and manage your data.</p></div></div>
+      <article class="panel"><h3>Appearance</h3><p>Switch between light and dark mode.</p><button class="secondary-btn" id="settingsTheme">Toggle theme</button><label class="setting-row"><span>Large text</span><input type="checkbox" id="largeText"></label></article>
+      <article class="panel"><h3>Backup & restore</h3><p>Export or restore your JSON backup.</p><div class="quick-actions"><button class="primary-btn" id="downloadBackup">Download backup</button><label class="secondary-btn file-button">Restore backup<input type="file" id="restoreBackup" accept=".json"></label></div></article>
+      <article class="panel danger-panel"><h3>Clear browser data</h3><p>This permanently removes HealthMemory data.</p><button class="danger-btn" id="clearData">Clear all data</button></article>
+    </section>
+
+    <!-- INFORMATION ONLY -->
+    <section class="page" id="about">
+      <div class="page-intro"><div><h1>How HealthMemory works</h1><p>A simple guide to your health organiser.</p></div></div>
+      <article class="panel info-panel">
+        <h3>1. Create profiles</h3><p>Add yourself and family members and select the active profile.</p>
+        <h3>2. Store medical records</h3><p>Upload PDF reports or images with dates and notes.</p>
+        <h3>3. Manage medicines</h3><p>Set medicine details, schedule and duration. Mark doses done daily.</p>
+        <h3>4. Schedule appointments</h3><p>Save doctor details, speciality, date, time and clinic.</p>
+        <h3>5. Review timeline</h3><p>See medical records, medicines and appointments chronologically.</p>
+        <h3>6. Backup</h3><p>Download a JSON backup regularly and restore it when needed.</p>
+        <div class="notice">HealthMemory is an organiser, not a medical service. It does not diagnose conditions or replace professional advice.</div>
+        <div class="notice warning">Demo privacy: Information is stored locally in your browser. This is not encrypted medical storage.</div>
+      </article>
+    </section>
+
+    <footer class="footer">HealthMemory · Organise today, care better tomorrow.</footer>
+  </main>
+</div>
+
+<div id="toast" class="toast" role="status"></div>
+<dialog id="viewerDialog" class="viewer-dialog">
+  <div class="viewer-head"><strong id="viewerTitle">Document</strong><button id="closeViewer" class="secondary-btn">Close ✕</button></div>
+  <iframe id="pdfFrame" title="PDF report viewer"></iframe><img id="imageFrame" alt="Medical report">
+</dialog>
+</body>
+</html>
